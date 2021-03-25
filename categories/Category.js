@@ -11,6 +11,7 @@ const Category = connection.define('categories', {
     }
 })
 
-Category.sync({force: true});
+// Forçar o Modal a criar a tabela
+Category.sync({force: false});
 
 module.exports = Category;

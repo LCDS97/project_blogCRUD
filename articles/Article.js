@@ -22,6 +22,7 @@ Category.hasMany(Article)
 // belongsTo (Um artigo pertence a uma categoria) Relacionamento: 1- Para -1
 Article.belongsTo(Category);
 
-Article.sync({force: true});
+// Forçar o Modal a criar a tabela
+Article.sync({force: false});
 
 module.exports = Article;
