@@ -5,7 +5,7 @@ const connection = require("./database/connection");
 
 
 const categoriesController = require("./categories/CategoriesController");
-const articlesController = require("./articles/articlesController");
+const articlesController = require("./articles/ArticlesController");
 
 // Modals do Article e Category
 const Article = require("./articles/Article");
@@ -38,7 +38,8 @@ app.use("/",articlesController);
 // Rotas
 app.get("/", ( req, res) => {
     Article.findAll({
-        order: [['id','DESC']]
+        order: [['id','DESC']],
+        limit: 4
     }).then(articles => {
 
         Category.findAll().then(categories => {

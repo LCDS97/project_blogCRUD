@@ -57,5 +57,83 @@ router.post("/articles/delete", (req,res) => {
     }
 });
 
+router.get("/admin/articles/edit/:id", (req, res) => {
+    var id = req.params.id;
+
+    Article.findByPk(id).then(article => {
+        if(article != undefined) {
+
+            Category.findAll().then(categories => {
+                res.render("admin/articles/edit", { categories:categories, article: article })
+            });
+
+
+        }else {
+            res.redirect("/admin/articles")
+        }
+    }).catch(err =>{
+        res.redirect("/admin/articles")
+    });
+});
+
+// Atualizando artigo
+router.post("/articles/update", (req, res) => {
+    var id = req.body.id;
+    var title = req.body.title;
+    var body = req.body.body;
+    var category = req.body.category;
+
+    Article.update({
+        title: title,
+        body: body,
+        categoryId: category,
+        slug:slugify(title)},{
+            where: { id:id }
+        }).then(() => {
+            res.redirect("/admin/articles");
+        }).catch(err => {
+            res.redirect("/");
+        });
+
+});
+
+// Lógica de paginação nos artigos
+router.get("/articles/page/:num", (req, res) => {
+        var page = req.params.num;
+        var offset = 0;
+
+        if(isNaN(page) || page == 1){
+            offset = 0;
+        }else {
+            offset = (parseInt(page) - 1) * 4;
+        }   
+
+        // Retorna tudo do modal e faz uma contagem
+        Article.findAndCountAll({
+            // Limite de contagem
+            limit: 4,
+            // Retorna a partir de um número
+            offset: offset,
+            order: [['id','DESC']]
+        }).then(articles => {
+
+            var next;
+            if(offset + 4 >= articles.count){
+                next = false;
+            }else{
+                next = true;
+            }
+
+            var result = {
+                page: parseInt(page),
+                next: next,
+                articles : articles
+            }
+
+            Category.findAll().then(categories => {
+                res.render("admin/articles/page", {result: result, categories: categories});
+            });
+        })
+});
 
 module.exports = router;
