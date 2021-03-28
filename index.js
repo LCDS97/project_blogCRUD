@@ -8,10 +8,12 @@ const categoriesController = require("./categories/CategoriesController");
 const articlesController = require("./articles/ArticlesController");
 const usersController = require("./users/UsersController");
 
+
 // Modals do Article e Category
 const Article = require("./articles/Article");
 const Category = require("./categories/Category");
 const User = require("./users/User");
+
 
 
 // View engine
